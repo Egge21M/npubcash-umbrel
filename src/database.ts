@@ -1,4 +1,5 @@
 import { Database as BetterSqliteDatabase } from "better-sqlite3";
+import { Transaction } from "./types";
 
 interface Database {
   save: (query: string, parameters: any[]) => void;
@@ -22,12 +23,22 @@ export class SqliteDatabase implements Database {
     return SqliteDatabase.instance;
   }
   save(query: string, parameters: any[]) {
-    const statement = this.db.prepare(query);
-    statement.run(parameters);
+    try {
+      const statement = this.db.prepare(query);
+      statement.run(parameters);
+    } catch (e) {
+      console.log(e);
+      throw new Error("Failed to run query");
+    }
   }
   get(query: string, parameters: any[]) {
-    const statement = this.db.prepare(query);
-    return statement.all(parameters);
+    try {
+      const statement = this.db.prepare(query);
+      return statement.all(parameters);
+    } catch (e) {
+      console.log(e);
+      throw new Error("Failed to run query");
+    }
   }
 }
 
@@ -39,16 +50,28 @@ export class TransactionDbStore {
     this.db = db;
   }
 
-  init(db: Database) {
+  init(db?: Database) {
     if (!TransactionDbStore.instance) {
-      const newInstance = new TransactionDbStore(db);
+      if (!db) {
+        throw new Error(
+          "store not initialised. pass db parameter to initialise one",
+        );
+      }
+      TransactionDbStore.instance = new TransactionDbStore(db);
     }
+    return TransactionDbStore.instance;
   }
 
-  save(transaction: { data: string; timestamp: number }) {
-    this.db.save("INSERT INTO transactions (data, timestamp) VALUES (?, ?)", [
-      transaction.data,
-      transaction.timestamp,
-    ]);
+  save(transaction: Transaction) {
+    this.db.save(
+      "INSERT INTO transactions (created_at, amount, status, payment_request, payment_hash) VALUES (?, ?, ?, ?, ?)",
+      [
+        transaction.created_at,
+        transaction.amount,
+        transaction.status,
+        transaction.payment_request,
+        transaction.payment_hash,
+      ],
+    );
   }
 }
