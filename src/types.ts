@@ -1,3 +1,5 @@
+import { Proof } from "@cashu/cashu-ts";
+
 export type Config = {
   method: "nsec";
   ncrypt: string;
@@ -15,4 +17,12 @@ export type Transaction = {
   status: "pending" | "successfull" | "failed";
   payment_request: string;
   payment_hash: string;
+};
+
+export type Change = {
+  created_at: number;
+  id: string;
+  amount: number;
+  secret: string;
+  C: string;
 };
