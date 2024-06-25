@@ -2,7 +2,7 @@ const fs = require("fs");
 const path = require("path");
 const Database = require("better-sqlite3");
 
-const db = new Database("your_database.db");
+const db = new Database("test.db");
 
 function getMigrationFiles() {
   return fs

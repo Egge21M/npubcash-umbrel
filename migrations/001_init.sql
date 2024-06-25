@@ -11,4 +11,14 @@ CREATE TABLE IF NOT EXISTS transactions (
     payment_hash TEXT NOT NULL
 );
 
+CREATE TABLE IF NOT EXISTS change (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    created_at INTEGER NOT NULL,
+    proof_id TEXT NOT NULL,
+    amount INTEGER NOT NULL,
+    secret TEXT NOT NULL,
+    C TEXT NOT NULL
+);
+
+
 INSERT INTO schema_version (version) VALUES (1);
