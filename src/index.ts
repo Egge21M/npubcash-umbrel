@@ -8,15 +8,8 @@ import { ChangeDbStore } from "./store/ChangeDbStore";
 import { TransactionDbStore } from "./store/TransactionDbStore";
 
 const configController = new FileConfigController();
-const walletController = new WalletController();
 const db = new SqliteDatabase("test.db");
-const transactionStore = TransactionDbStore.init(db);
-const changeStore = ChangeDbStore.init(db);
-AppControllerSingleton.init(
-  configController,
-  walletController,
-  transactionStore,
-  changeStore,
-);
+const walletController = new WalletController(db);
+AppControllerSingleton.init(configController, walletController);
 
 app.listen(8080);

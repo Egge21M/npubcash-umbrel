@@ -16,27 +16,19 @@ export class AppControllerSingleton {
   private constructor(
     configController: ConfigControllerInterface,
     walletController: WalletController,
-    transactionStore: TransactionDbStore,
-    changeStore: ChangeDbStore,
   ) {
     this.configController = configController;
     this.walletController = walletController;
-    this.transactionStore = transactionStore;
-    this.changeStore = changeStore;
   }
 
   static init(
     configController: ConfigControllerInterface,
     walletController: WalletController,
-    transactionStore: TransactionDbStore,
-    changeStore: ChangeDbStore,
   ) {
     if (!AppControllerSingleton.instance) {
       AppControllerSingleton.instance = new AppControllerSingleton(
         configController,
         walletController,
-        transactionStore,
-        changeStore,
       );
     }
     const config =
