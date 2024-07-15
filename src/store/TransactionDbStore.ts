@@ -9,7 +9,7 @@ export class TransactionDbStore {
     this.db = db;
   }
 
-  init(db?: Database) {
+  static init(db?: Database) {
     if (!TransactionDbStore.instance) {
       if (!db) {
         throw new Error(

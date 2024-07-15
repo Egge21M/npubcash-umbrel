@@ -2,29 +2,41 @@ import { decrypt } from "nostr-tools/nip49";
 import { WalletController } from "./WalletController";
 import { ConfigControllerInterface } from "./types";
 import { NCSDK, NsecSigner } from "cashu-address-sdk";
+import { TransactionDbStore } from "./store/TransactionDbStore";
+import { ChangeDbStore } from "./store/ChangeDbStore";
 
 export class AppControllerSingleton {
   private static instance: AppControllerSingleton;
   status: "startup" | "uninitialised" | "locked" | "ready" = "startup";
   configController: ConfigControllerInterface;
   walletController: WalletController;
+  transactionStore: TransactionDbStore;
+  changeStore: ChangeDbStore;
 
-  constructor(
+  private constructor(
     configController: ConfigControllerInterface,
     walletController: WalletController,
+    transactionStore: TransactionDbStore,
+    changeStore: ChangeDbStore,
   ) {
     this.configController = configController;
     this.walletController = walletController;
+    this.transactionStore = transactionStore;
+    this.changeStore = changeStore;
   }
 
   static init(
     configController: ConfigControllerInterface,
     walletController: WalletController,
+    transactionStore: TransactionDbStore,
+    changeStore: ChangeDbStore,
   ) {
     if (!AppControllerSingleton.instance) {
       AppControllerSingleton.instance = new AppControllerSingleton(
         configController,
         walletController,
+        transactionStore,
+        changeStore,
       );
     }
     const config =
